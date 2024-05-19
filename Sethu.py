@@ -2,12 +2,11 @@ from googleapiclient.discovery import build
 import pandas as pd
 import streamlit as st
 import mysql.connector
-from googleapiclient.discovery import build
 import datetime
 
 #API key connection
 def Api_connect():
-    Api_Id="YOUR_API_KEY"
+    Api_Id="AIzaSyCHLzEJsRtYPevDdUcbmQoqtMkG2FakUH0"
     api_service_name="youtube"
     api_version="v3"
     youtube=build(api_service_name,api_version,developerKey=Api_Id)
@@ -172,10 +171,8 @@ def get_channel_info(channel_id):
             id=channel_id
         )
         response = request.execute()
-
         if 'items' not in response or not response['items']:
             raise ValueError("No channel information found for the given channel ID")
-
         for i in response['items']:
             data = {
                 "Channel_Name": i["snippet"]["title"],
@@ -207,7 +204,6 @@ def get_videos_ids(channel_id):
         for i in range(len(response1['items'])):
             video_ids.append(response1['items'][i]['snippet']['resourceId']['videoId'])
         next_page_token = response1.get('nextPageToken')
-
         if next_page_token is None:
             break
     return video_ids
@@ -279,7 +275,6 @@ def get_comment_info(video_ids):
                 # Comments are disabled for this video, so skip it
                 print(f"Comments are disabled for video with ID: {video_id}")
                 continue
-            
             for item in response["items"]:
                 comment = item["snippet"]["topLevelComment"]
                 data = {
@@ -299,13 +294,11 @@ def channel_details(channel_id):
     conn = connect_mysql()
     if conn:
         create_tables(conn)
-
         ch_details = get_channel_info(channel_id)
         pl_details = get_playlist_details(channel_id)
         vi_ids = get_videos_ids(channel_id)
         vi_details = get_video_info(vi_ids)
         com_details = get_comment_info(vi_ids)
-
         if ch_details:
             insert_data(conn, "channel_details", ch_details)
         if pl_details:
@@ -314,11 +307,11 @@ def channel_details(channel_id):
             insert_data(conn, "video_details", vi_details)
         if com_details:
             insert_data(conn, "comment_details", com_details)
-
         conn.close()
         return "Upload completed successfully"
     else:
         return "Error connecting to MySQL database"
+
 
 def tables(channel_name):
     news= channels_table(channel_name)
@@ -335,45 +328,41 @@ def show_comments_table(conn):
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM comment_details")
         com_list = cursor.fetchall()
-        
         if com_list:
             df3 = st.dataframe(com_list)
         else:
             st.write("No data found in comment_details table.")
             df3 = None  # Set df3 to None if there's no data
-        
         return df3
     except Exception as e:
         st.write(f"Error fetching data from comment_details table: {e}")
         return None
+
 
 def show_playlists_table(conn):
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM playlist_details")
         pl_list = cursor.fetchall()
-        
         if pl_list:
             df1 = st.dataframe(pl_list)
         else:
             st.write("No data found in playlist_details table.")
-        
         return df1
     except Exception as e:
         st.write(f"Error fetching data from playlist_details table: {e}")
         return None
+
 
 def show_videos_table(conn):
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM video_details")
         vi_list = cursor.fetchall()
-        
         if vi_list:
             df2 = st.dataframe(vi_list)
         else:
             st.write("No data found in video_details table.")
-        
         return df2
     except Exception as e:
         st.write(f"Error fetching data from video_details table: {e}")
@@ -383,14 +372,12 @@ def show_channels_table(conn):
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM channel_details")
-        ch_list = cursor.fetchall()
-        
+        ch_list = cursor.fetchall()        
         if ch_list:
             df = st.dataframe(ch_list)
         else:
             st.write("No data found in channel_details table.")
-            df = None  # Set df to None if there's no data
-        
+            df = None  # Set df to None if there's no data        
         return df
     except Exception as e:
         st.write(f"Error fetching data from channel_details table: {e}")
@@ -409,7 +396,7 @@ def check_channel_exists(conn, channel_id):
     except Exception as e:
         print(f"Error checking channel existence: {e}")
         return False
-        
+
 # Function to insert channel details into MySQL
 def insert_channel_details(conn, channel_id):
     try:
@@ -424,11 +411,11 @@ def insert_channel_details(conn, channel_id):
 # Streamlit app
 # Add your name, contact details, and profile image
 st.sidebar.subheader("About the Developer")
-st.sidebar.image("1.jpg", caption="Your Name", width=150)
-st.sidebar.title("Sethumadhavan V")
+st.sidebar.image("1.jpg", caption="Sethumadhavan V", width=150)
 st.sidebar.subheader("Contact Details")
 st.sidebar.write("Email: sethumadhavanvelu2002@example.com")
 st.sidebar.write("Phone: 9159299878")
+st.sidebar.write("[LinkedIn ID](https://www.linkedin.com/in/sethumadhavan-v-b84890257/)")
 
 # Title and headers
 with st.sidebar:
@@ -478,10 +465,6 @@ conn = connect_mysql()
 if conn:
     all_channels = get_all_channels(conn)
     unique_channel = st.selectbox("Select the Channel", all_channels)
-
-    if st.button("Migrate to SQL"):
-        display_tables(unique_channel)
-
     show_table = st.radio("SELECT THE TABLE FOR VIEW", ("CHANNELS", "PLAYLISTS", "VIDEOS", "COMMENTS"))
 
     if show_table == "CHANNELS":
@@ -513,16 +496,16 @@ def execute_query(conn, query):
         
 # SQL queries
 queries = {
-    "1": "SELECT Title AS Video_Name, Channel_Name FROM video_details",
-    "2": "SELECT Channel_Name, COUNT(*) AS Video_Count FROM video_details GROUP BY Channel_Name ORDER BY Video_Count DESC LIMIT 5",
-    "3": "SELECT Title AS Video_Name, Channel_Name, Views FROM video_details ORDER BY Views DESC LIMIT 10",
-    "4": "SELECT v.Title AS Video_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title",
-    "5": "SELECT Title AS Video_Name, Channel_Name, Likes FROM video_details ORDER BY Likes DESC LIMIT 10",
-    "6": "SELECT Title AS Video_Name, SUM(Likes) AS Total_Likes, SUM(likes) AS Total_likes FROM video_details GROUP BY Title",
-    "7": "SELECT Channel_Name, SUM(Views) AS Total_Views FROM video_details GROUP BY Channel_Name",
-    "8": "SELECT DISTINCT Channel_Name FROM video_details WHERE YEAR(Published_Date) = 2022",
-    "9": "SELECT Channel_Name, AVG(TIME_TO_SEC(TIMEDIFF(STR_TO_DATE(Duration, '%H:%i:%s'), STR_TO_DATE('00:00:00', '%H:%i:%s')))) AS Average_Duration FROM video_details GROUP BY Channel_Name",
-    "10": "SELECT v.Title AS Video_Name, v.Channel_Name AS Channel_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title, v.Channel_Name ORDER BY Comment_Count DESC LIMIT 10"
+    "1. What are the names of all the videos and their corresponding channels?": "SELECT Title AS Video_Name, Channel_Name FROM video_details",
+    "2. Which channels have the most number of videos, and how many videos do they have?": "SELECT Channel_Name, COUNT(*) AS Video_Count FROM video_details GROUP BY Channel_Name ORDER BY Video_Count DESC LIMIT 5",
+    "3. What are the top 10 most viewed videos and their respective channels?": "SELECT Title AS Video_Name, Channel_Name, Views FROM video_details ORDER BY Views DESC LIMIT 10",
+    "4. How many comments were made on each video, and what are their corresponding video names?": "SELECT v.Title AS Video_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title",
+    "5. Which videos have the highest number of likes, and what are their corresponding channel names?": "SELECT Title AS Video_Name, Channel_Name, Likes FROM video_details ORDER BY Likes DESC LIMIT 10",
+    "6. What is the total number of likes and dislikes for each video, and what are their corresponding video names?": "SELECT Title AS Video_Name, SUM(Likes) AS Total_Likes, SUM(likes) AS Total_likes FROM video_details GROUP BY Title",
+    "7. What is the total number of views for each channel, and what are their corresponding channel names?": "SELECT Channel_Name, SUM(Views) AS Total_Views FROM video_details GROUP BY Channel_Name",
+    "8. What are the names of all the channels that have published videos in the year 2022?": "SELECT DISTINCT Channel_Name FROM video_details WHERE YEAR(Published_Date) = 2022",
+    "9. What is the average duration of all videos in each channel, and what are their corresponding channel names?": "SELECT Channel_Name, AVG(TIME_TO_SEC(TIMEDIFF(STR_TO_DATE(Duration, '%H:%i:%s'), STR_TO_DATE('00:00:00', '%H:%i:%s')))) AS Average_Duration FROM video_details GROUP BY Channel_Name",
+    "10. Which videos have the highest number of comments, and what are their corresponding channel names?": "SELECT v.Title AS Video_Name, v.Channel_Name AS Channel_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title, v.Channel_Name ORDER BY Comment_Count DESC LIMIT 10"
 }
 
 st.markdown("<h1 style='font-size:18px; color:white;'>Comprehensive Analysis of YouTube Videos and Channels Using SQL Queries</h1>", unsafe_allow_html=True)
