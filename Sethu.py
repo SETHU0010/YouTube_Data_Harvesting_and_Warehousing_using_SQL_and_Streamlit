@@ -85,7 +85,7 @@ def create_tables(conn):
         print("Tables created or already exist")
     except Exception as e:
         print(f"Error creating tables: {e}")
-
+        
 # Function to insert data into the corresponding table
 def insert_data(conn, table_name, data):
     try:
@@ -352,7 +352,6 @@ def show_playlists_table(conn):
     except Exception as e:
         st.write(f"Error fetching data from playlist_details table: {e}")
         return None
-
 
 def show_videos_table(conn):
     try:
