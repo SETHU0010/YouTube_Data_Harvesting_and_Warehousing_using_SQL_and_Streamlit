@@ -21,13 +21,14 @@ Before using the application, ensure you have the following prerequisites set up
 3. SQL Data Warehouse
 4. Data Analysis
 5. Streamlit UI
-## Required Python Libraries
 
-The following Python libraries are required for the project:
+## Required Python Libraries
+#The following Python libraries are required for the project:
 1.google-api-python-client: For interacting with the YouTube API. 
 2. pandas: For data manipulation and analysis.
 3. mysql-connector-python: For connecting to MySQL database.
 4. Streamlit: For building the user interface and web application.
 5. datetime: For handling date and time operations.
+
 ## You can install these libraries using pip:
 --> pip install google-api-python-client pandas streamlit mysql-connector-python
