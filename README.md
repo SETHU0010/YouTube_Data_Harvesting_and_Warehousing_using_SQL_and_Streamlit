@@ -26,4 +26,4 @@ The following Python libraries are required for the project:
 5. datetime: For handling date and time operations.
 
 You can install these libraries using pip:
-pip install google-api-python-client pandas streamlit mysql-connector-python
+--> pip install google-api-python-client pandas streamlit mysql-connector-python
