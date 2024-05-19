@@ -1,0 +1,2 @@
+# YouTube-_Data-_Harvesting_and_Warehousing_using-SQL-and-Streamlit
+This script is a comprehensive tool for harvesting and warehousing YouTube data using Python, Streamlit, and MySQL. It allows users to collect various details such as channel information, playlist details, video details, and comments from YouTube channels. The collected data is then stored in MySQL tables for further analysis and management.
