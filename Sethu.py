@@ -6,20 +6,13 @@ from googleapiclient.discovery import build
 import datetime
 
 #API key connection
-
 def Api_connect():
     Api_Id="AIzaSyCHLzEJsRtYPevDdUcbmQoqtMkG2FakUH0"
-
     api_service_name="youtube"
     api_version="v3"
-
     youtube=build(api_service_name,api_version,developerKey=Api_Id)
-
     return youtube
-
 youtube=Api_connect()
-
-
 
 # Connect to MySQL
 def connect_mysql():
@@ -203,9 +196,7 @@ def get_videos_ids(channel_id):
     video_ids = []
     response = youtube.channels().list(id=channel_id, part='contentDetails').execute()
     Playlist_Id = response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
-
     next_page_token = None
-
     while True:
         response1 = youtube.playlistItems().list(
             part='snippet',
@@ -303,8 +294,6 @@ def get_comment_info(video_ids):
         print(f"An error occurred: {e}")
     return comment_data
 
-
-
 # Function to upload all details to MySQL
 def channel_details(channel_id):
     conn = connect_mysql()
@@ -331,9 +320,7 @@ def channel_details(channel_id):
     else:
         return "Error connecting to MySQL database"
 
-
 def tables(channel_name):
-
     news= channels_table(channel_name)
     if news:
         st.write(news)
@@ -341,7 +328,6 @@ def tables(channel_name):
         playlist_table(channel_name)
         videos_table(channel_name)
         comments_table(channel_name)
-
     return "Tables Created Successfully"
 
 def show_comments_table(conn):
@@ -361,7 +347,6 @@ def show_comments_table(conn):
         st.write(f"Error fetching data from comment_details table: {e}")
         return None
 
-
 def show_playlists_table(conn):
     try:
         cursor = conn.cursor(dictionary=True)
@@ -378,7 +363,6 @@ def show_playlists_table(conn):
         st.write(f"Error fetching data from playlist_details table: {e}")
         return None
 
-
 def show_videos_table(conn):
     try:
         cursor = conn.cursor(dictionary=True)
@@ -394,7 +378,6 @@ def show_videos_table(conn):
     except Exception as e:
         st.write(f"Error fetching data from video_details table: {e}")
         return None
-
 
 def show_channels_table(conn):
     try:
@@ -413,7 +396,6 @@ def show_channels_table(conn):
         st.write(f"Error fetching data from channel_details table: {e}")
         return None
 
-
 # Function to check if the channel ID already exists in MySQL
 def check_channel_exists(conn, channel_id):
     try:
@@ -427,7 +409,7 @@ def check_channel_exists(conn, channel_id):
     except Exception as e:
         print(f"Error checking channel existence: {e}")
         return False
-
+        
 # Function to insert channel details into MySQL
 def insert_channel_details(conn, channel_id):
     try:
@@ -446,7 +428,7 @@ st.sidebar.image("1.jpg", caption="Your Name", width=150)
 st.sidebar.title("Sethumadhavan V")
 st.sidebar.subheader("Contact Details")
 st.sidebar.write("Email: sethumadhavanvelu2002@example.com")
-st.sidebar.write("Phone: +1234567890")
+st.sidebar.write("Phone: 9159299878")
 
 # Title and headers
 with st.sidebar:
