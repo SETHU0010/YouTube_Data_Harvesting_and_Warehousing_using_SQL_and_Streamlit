@@ -6,7 +6,7 @@ import datetime
 
 #API key connection
 def Api_connect():
-    Api_Id="AIzaSyCHLzEJsRtYPevDdUcbmQoqtMkG2FakUH0"
+    Api_Id="YOUR_API_KEY"
     api_service_name="youtube"
     api_version="v3"
     youtube=build(api_service_name,api_version,developerKey=Api_Id)
