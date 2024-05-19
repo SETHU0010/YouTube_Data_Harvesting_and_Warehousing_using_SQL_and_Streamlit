@@ -1,3 +1,10 @@
+<h3 align="center">A passionate frontend developer from India</h3>
+
+<h3 align="left">Connect with me:</h3>
+<p align="left">
+</p>
+
+<p><img align="center" src="https://github-readme-stats.vercel.app/api/top-langs?username=sethu0010&show_icons=true&locale=en&layout=compact" alt="sethu0010" /></p>
 
 # YouTube Data Harvesting and Warehousing using SQL and Streamlit
 
@@ -23,7 +30,7 @@ Before using the application, ensure you have the following prerequisites set up
 5. Streamlit UI
 
 ## Required Python Libraries
-#The following Python libraries are required for the project:
+The following Python libraries are required for the project:
 1.google-api-python-client: For interacting with the YouTube API. 
 2. pandas: For data manipulation and analysis.
 3. mysql-connector-python: For connecting to MySQL database.
