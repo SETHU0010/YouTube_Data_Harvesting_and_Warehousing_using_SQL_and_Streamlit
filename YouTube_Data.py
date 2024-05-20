@@ -7,7 +7,7 @@ import re
 
 #API key connection
 def Api_connect():
-    Api_Id="AIzaSyCS-NnHQKO65o2RYWejYSbE_PFSWucU1z0"
+    Api_Id="Your_API_Key"
     api_service_name="youtube"
     api_version="v3"
     youtube=build(api_service_name,api_version,developerKey=Api_Id)
@@ -523,7 +523,7 @@ queries = {
     "10. Which videos have the highest number of comments, and what are their corresponding channel names?": "SELECT v.Title AS Video_Name, v.Channel_Name AS Channel_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title, v.Channel_Name ORDER BY Comment_Count DESC LIMIT 10"
 }
 
-st.markdown("<h1 style='font-size:18px; color:white;'>Comprehensive Analysis of YouTube Videos and Channels Using SQL Queries</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='font-size:18px; color:purple;'>Comprehensive Analysis of YouTube Videos and Channels Using SQL Queries</h1>", unsafe_allow_html=True)
 
 # Streamlit app
 selected_query = st.selectbox("Select the SQL query", list(queries.keys()))
