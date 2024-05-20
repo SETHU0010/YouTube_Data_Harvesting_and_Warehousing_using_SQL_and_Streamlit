@@ -3,10 +3,11 @@ import pandas as pd
 import streamlit as st
 import mysql.connector
 import datetime
+import re
 
 #API key connection
 def Api_connect():
-    Api_Id="YOUR_API_KEY"
+    Api_Id="AIzaSyCS-NnHQKO65o2RYWejYSbE_PFSWucU1z0"
     api_service_name="youtube"
     api_version="v3"
     youtube=build(api_service_name,api_version,developerKey=Api_Id)
@@ -63,7 +64,7 @@ def create_tables(conn):
                 Thumbnail VARCHAR(255),
                 Description TEXT,
                 Published_Date DATETIME,
-                Duration VARCHAR(255),
+                Duration Time,
                 Views BIGINT,
                 Likes BIGINT,
                 Comments BIGINT,
@@ -120,11 +121,21 @@ def insert_data(conn, table_name, data):
                     item["Channel_Name"], published_at, item["Video_Count"]
                 ))
         elif table_name == "video_details":
+            def parse_duration(duration):
+                 match = re.match(r'^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$', duration)
+                 if not match:
+                    return None             
+                 hours, minutes, seconds = match.groups()
+                 hours = int(hours) if hours else 0
+                 minutes = int(minutes) if minutes else 0
+                 seconds = int(seconds) if seconds else 0       
+                 return f"{hours:02}:{minutes:02}:{seconds:02}"  
             for item in data:
                 tags = ', '.join(item["Tags"]) if item["Tags"] else None
                 if tags and len(tags) > 65535:
                     tags = tags[:65535]  # Truncate if too long
                 published_date = datetime.datetime.strptime(item["Published_Date"], "%Y-%m-%dT%H:%M:%SZ")
+                duration = parse_duration(item["Duration"])
                 cursor.execute("""
                     INSERT INTO video_details (
                         Channel_Name, Channel_Id, Video_Id, Title, Tags, Thumbnail,
@@ -141,9 +152,9 @@ def insert_data(conn, table_name, data):
                 """, (
                     item["Channel_Name"], item["Channel_Id"], item["Video_Id"], item["Title"],
                     tags, item["Thumbnail"], item["Description"], published_date,
-                    item["Duration"], item["Views"], item["Likes"], item["Comments"],
+                    duration, item["Views"], item["Likes"], item["Comments"],
                     item["Favorite_Count"], item["Definition"], item["Caption_Status"]
-                ))
+                ))  
         elif table_name == "comment_details":
             for item in data:
                 comment_published = datetime.datetime.strptime(item["Comment_Published"], "%Y-%m-%dT%H:%M:%SZ")
@@ -264,27 +275,32 @@ def get_comment_info(video_ids):
     comment_data = []
     try:
         for video_id in video_ids:
-            request = youtube.commentThreads().list(
-                part="snippet",
-                videoId=video_id,
-                maxResults=100
-            )
-            response = request.execute()
-            
-            if 'items' not in response:
-                # Comments are disabled for this video, so skip it
-                print(f"Comments are disabled for video with ID: {video_id}")
-                continue
-            for item in response["items"]:
-                comment = item["snippet"]["topLevelComment"]
-                data = {
-                    "Comment_Id": comment["id"],
-                    "Video_Id": video_id,
-                    "Comment_Text": comment["snippet"]["textDisplay"],
-                    "Comment_Author": comment["snippet"]["authorDisplayName"],
-                    "Comment_Published": comment["snippet"]["publishedAt"]
-                }
-                comment_data.append(data)
+            next_page_token = None
+            while True:
+                request = youtube.commentThreads().list(
+                    part="snippet",
+                    videoId=video_id,
+                    maxResults=100,
+                    pageToken=next_page_token
+                )
+                response = request.execute()              
+                if 'items' not in response:
+                    # Comments are disabled for this video, so skip it
+                    print(f"Comments are disabled for video with ID: {video_id}")
+                    break                
+                for item in response["items"]:
+                    comment = item["snippet"]["topLevelComment"]
+                    data = {
+                        "Comment_Id": comment["id"],
+                        "Video_Id": video_id,
+                        "Comment_Text": comment["snippet"]["textDisplay"],
+                        "Comment_Author": comment["snippet"]["authorDisplayName"],
+                        "Comment_Published": comment["snippet"]["publishedAt"]
+                    }
+                    comment_data.append(data)               
+                next_page_token = response.get('nextPageToken')
+                if not next_page_token:
+                    break
     except Exception as e:
         print(f"An error occurred: {e}")
     return comment_data
