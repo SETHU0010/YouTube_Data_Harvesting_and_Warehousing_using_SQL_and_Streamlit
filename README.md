@@ -1,3 +1,6 @@
+Option 1: Direct Link
+[Watch the video](https://github.com/SETHU0010/YouTube_Data_Harvesting_and_Warehousing_using_SQL_and_Streamlit/blob/main/video1148319727%20(1).mp4)
+
 # YouTube Data Harvesting and Warehousing using SQL and Streamlit
 
 ## Description
