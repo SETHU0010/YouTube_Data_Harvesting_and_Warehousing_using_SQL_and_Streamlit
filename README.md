@@ -1,10 +1,11 @@
 # YouTube Data Harvesting and Warehousing using SQL and Streamlit
 
-This project involves data harvesting from YouTube and warehousing it using SQL and Streamlit.
-
 ## Watch the Demo Video
-
 [Watch the demo video](https://github.com/SETHU0010/YouTube_Data_Harvesting_and_Warehousing_using_SQL_and_Streamlit/issues/1#issue-2332677550)
+
+## Watch the Video
+
+[![Watch the video](https://img.youtube.com/vi/fkGI3VC5peg/0.jpg)](https://youtu.be/fkGI3VC5peg?si=bcYfDjLz6NouZMfB)
 
 ## Description
 
