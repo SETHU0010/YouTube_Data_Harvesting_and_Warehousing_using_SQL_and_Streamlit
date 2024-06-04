@@ -1,12 +1,7 @@
 # YouTube Data Harvesting and Warehousing using SQL and Streamlit
 
-
+## Demo Video
 https://github.com/SETHU0010/YouTube_Data_Harvesting_and_Warehousing_using_SQL_and_Streamlit/assets/127223764/b369fad8-4fb2-401e-a188-81db1c2dbf80
-
-
-## Watch the Video
-
-[![Watch the video](https://img.youtube.com/vi/fkGI3VC5peg/0.jpg)](https://youtu.be/fkGI3VC5peg?si=bcYfDjLz6NouZMfB)
 
 ## Description
 
@@ -39,3 +34,5 @@ The following Python libraries are required for the project:
 
 ## You can install these libraries using pip:
 --> pip install google-api-python-client pandas streamlit mysql-connector-python
+
+##Youtube Link: (https://img.youtube.com/vi/fkGI3VC5peg/0.jpg)](https://youtu.be/fkGI3VC5peg?si=bcYfDjLz6NouZMfB)
