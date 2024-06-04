@@ -35,4 +35,4 @@ The following Python libraries are required for the project:
 ## You can install these libraries using pip:
 --> pip install google-api-python-client pandas streamlit mysql-connector-python
 
-##Youtube Link: (https://img.youtube.com/vi/fkGI3VC5peg/0.jpg)](https://youtu.be/fkGI3VC5peg?si=bcYfDjLz6NouZMfB)
+##Youtube Link: https://youtu.be/fkGI3VC5peg?si=_XKXl5l7jgI9ado8.
