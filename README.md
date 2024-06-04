@@ -3,8 +3,6 @@
 ## Watch the Demo Video
 [Watch the demo video](https://github.com/SETHU0010/YouTube_Data_Harvesting_and_Warehousing_using_SQL_and_Streamlit/issues/1#issue-2332677550)
 
-git clone https://github.com/SETHU0010/YouTube_Data_Harvesting_and_Warehousing_using_SQL_and_Streamlit.git
-
 
 ## Watch the Video
 
