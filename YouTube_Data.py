@@ -7,7 +7,7 @@ import re
 
 #API key connection
 def Api_connect():
-    Api_Id="Your_API_Key"
+    Api_Id="AIzaSyCS-NnHQKO65o2RYWejYSbE_PFSWucU1z0"
     api_service_name="youtube"
     api_version="v3"
     youtube=build(api_service_name,api_version,developerKey=Api_Id)
