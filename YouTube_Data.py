@@ -3,7 +3,10 @@ import pandas as pd
 import streamlit as st
 import mysql.connector
 import datetime
+import plotly.express as px
 import re
+
+st.markdown("<h1 style='font-size:30px; color:yellow;text-align:center;'>YouTube Data Harvesting and Warehousing using SQL and Streamlit</h1>", unsafe_allow_html=True)
 
 #API key connection
 def Api_connect():
@@ -14,22 +17,34 @@ def Api_connect():
     return youtube
 youtube=Api_connect()
 
-# Connect to MySQL
+# MySQL Connection
+import mysql.connector
+from mysql.connector import Error
+
 def connect_mysql():
     try:
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="root",
-            database="Project"
+            host="bwxvnszjkr8ajyvddpid-mysql.services.clever-cloud.com",
+            database="bwxvnszjkr8ajyvddpid",
+            user="u5bczmdiwo59zueo",
+            password="QBo3GpBXHLNvc1NXj3JP",
+            port=3306
         )
-        print("Connected to MySQL database")
-        return conn
-    except Exception as e:
+        if conn.is_connected():
+            print("Connected to MySQL database")
+            return conn
+    except Error as e:
         print(f"Error connecting to MySQL database: {e}")
         return None
 
-# Create necessary tables if they don't exist
+# Example usage:
+connection = connect_mysql()
+if connection:
+    # Perform database operations
+    connection.close()
+
+
+# Table Creation of MySQL
 def create_tables(conn):
     try:
         cursor = conn.cursor()
@@ -174,7 +189,8 @@ def insert_data(conn, table_name, data):
     except Exception as e:
         print(f"Error inserting data into {table_name} table: {e}")
 
-# Function to get channel information
+# Data Collection Functions
+# Channel Information
 def get_channel_info(channel_id):
     try:
         request = youtube.channels().list(
@@ -270,7 +286,7 @@ def get_playlist_details(channel_id):
         playlists.append(data)
     return playlists
 
-# Function to get comment details
+
 def get_comment_info(video_ids):
     comment_data = []
     try:
@@ -339,6 +355,7 @@ def tables(channel_name):
         comments_table(channel_name)
     return "Tables Created Successfully"
 
+#Display Tables
 def show_comments_table(conn):
     try:
         cursor = conn.cursor(dictionary=True)
@@ -423,28 +440,98 @@ def insert_channel_details(conn, channel_id):
         print(f"Error inserting channel details: {e}")
         return "Error: Failed to insert channel details"
 
-# Streamlit app
-# Add your name, contact details, and profile image
-st.sidebar.subheader("About the Developer")
-st.sidebar.image("1.jpg", caption="Sethumadhavan V", width=150)
-st.sidebar.subheader("Contact Details")
-st.sidebar.write("Email: sethumadhavanvelu2002@example.com")
-st.sidebar.write("Phone: 9159299878")
-st.sidebar.write("[LinkedIn ID](https://www.linkedin.com/in/sethumadhavan-v-b84890257/)")
+# Streamlit app sections
+def about_the_developer():
+    st.header("About the Developer")
+    st.image("1.jpg", caption="Sethumadhavan V", width=150)
+    st.subheader("Contact Details")
+    st.write("Email: sethumadhavanvelu2002@example.com")
+    st.write("Phone: 9159299878")
+    st.write("[LinkedIn ID](https://www.linkedin.com/in/sethumadhavan-v-b84890257/)")
+    st.write("[github.com](https://github.com/SETHU0010/YouTube_Data_Harvesting_and_Warehousing_using_SQL_and_Streamlit)")
 
-# Title and headers
-with st.sidebar:
-    st.header("Skills take away From This Project")
+def skills_take_away():
+    st.header("Skills Take Away From This Project")
     st.caption("Python Scripting")
     st.caption("Data Collection")
     st.caption("Streamlit")
     st.caption("API Integration")
     st.caption("Data Management using MySQL")
-    st.header("Domain")
-    st.caption("Social Media")
+
+def objective():
+    st.header("Objective")
+    st.write("Develop a StreamLit application for access and analysing data from multiple YouTube channels.")
+
+def features():
+    st.header("Features")
+    st.write("Recover channel details, video information, playlists, and comments using the YouTube API.")
+    st.write("Store recovered data in a MySQL database.")
+    st.write("Provide query functionality for data analysis within the application.")
+
+def workflow():
+    st.header("Workflow")
+    st.image("2.png", caption="Workflow", width=900)
+
+def prerequisites():
+    st.header("Prerequisites")
+    st.write("Before using the application, ensure you have the following prerequisites set up:")
+    st.write("1. Python Environment: Install Python on your system.")
+    st.write("2. Google API Key: Obtain a Google API key from the Google Cloud Console for accessing the YouTube API.")
+    st.write("3. Dependencies: Install required Python libraries using requirements.txt.")
+    st.write("4. SQL Database: Set up MySQL database and configure connection details in the code.")
+    st.write("5. Streamlit: Install Streamlit library for running the application.")
         
-# Main content
-st.markdown("<h1 style='font-size:30px; color:green;'>YouTube Data Harvesting and Warehousing using SQL and Streamlit</h1>", unsafe_allow_html=True)
+def required_python_libraries():
+    st.header("Required Python Libraries")
+    st.write("The following Python libraries are required for the project:")
+    libraries = ["googleapiclient.discovery", "pandas", "streamlit", "mysql.connector", "datetime", "re"]
+    st.write(libraries)
+
+def Approach():
+    st.header("Approach")
+    st.write("Set up a Streamlit app ")
+    st.write("Connect to the YouTube API")
+    st.write("Store and Clean data")
+    st.write("Migrate data to a SQL data warehouse")
+    st.write("Query the SQL data warehouse")
+    st.write("Display data in the Streamlit app")
+        
+def queries():
+    st.header("Queries")
+    # Your implementation of querying functionality
+    pass
+
+def main():
+    # Main layout
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.header("Navigation")
+        options = ["About the Developer", "Skills take away From This Project", "Objective", "Features", 
+                   "Workflow", "Prerequisites", "Required Python Libraries", "Approach"]
+        choice = st.radio("Go to", options)
+
+    with col2:
+        if choice == "About the Developer":
+            about_the_developer()
+        elif choice == "Skills take away From This Project":
+            skills_take_away()
+        elif choice == "Objective":
+            objective()
+        elif choice == "Features":
+            features()
+        elif choice == "Workflow":
+            workflow()
+        elif choice == "Prerequisites":
+            prerequisites()
+        elif choice == "Required Python Libraries":
+            required_python_libraries()
+        elif choice == "Approach":
+            Approach()
+if __name__ == "__main__":
+    main()
+
+#
 channel_id = st.text_input("Enter the channel ID")
 
 if st.button("Collect and store data"):
@@ -479,8 +566,7 @@ def display_tables(channel_name):
 conn = connect_mysql()
 if conn:
     all_channels = get_all_channels(conn)
-    unique_channel = st.selectbox("Select the Channel", all_channels)
-    show_table = st.radio("SELECT THE TABLE FOR VIEW", ("CHANNELS", "PLAYLISTS", "VIDEOS", "COMMENTS"))
+    show_table = st.selectbox("CHOOSE THE TABLE FOR VIEW", ("CHANNELS", "PLAYLISTS", "VIDEOS", "COMMENTS"))
 
     if show_table == "CHANNELS":
         show_channels_table(conn)
@@ -492,38 +578,35 @@ if conn:
         show_comments_table(conn)
     conn.close()
 
-        # Function to execute SQL queries and return results as dataframe
+
+
+# Function to execute a query and return a DataFrame
 def execute_query(conn, query):
     try:
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute(query)
-        result = cursor.fetchall()
-        if result:
-            df = pd.DataFrame(result)
-            return df
-        else:
-            return None
+        df = pd.read_sql(query, conn)
+        return df
     except Exception as e:
-        print(f"Error executing SQL query: {e}")
+        st.error(f"Error executing query: {e}")
         return None
             
 
-        
 # SQL queries
 queries = {
-    "1. What are the names of all the videos and their corresponding channels?": "SELECT Title AS Video_Name, Channel_Name FROM video_details",
-    "2. Which channels have the most number of videos, and how many videos do they have?": "SELECT Channel_Name, COUNT(*) AS Video_Count FROM video_details GROUP BY Channel_Name ORDER BY Video_Count DESC LIMIT 5",
-    "3. What are the top 10 most viewed videos and their respective channels?": "SELECT Title AS Video_Name, Channel_Name, Views FROM video_details ORDER BY Views DESC LIMIT 10",
-    "4. How many comments were made on each video, and what are their corresponding video names?": "SELECT v.Title AS Video_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title",
-    "5. Which videos have the highest number of likes, and what are their corresponding channel names?": "SELECT Title AS Video_Name, Channel_Name, Likes FROM video_details ORDER BY Likes DESC LIMIT 10",
-    "6. What is the total number of likes and dislikes for each video, and what are their corresponding video names?": "SELECT Title AS Video_Name, SUM(Likes) AS Total_Likes, SUM(likes) AS Total_likes FROM video_details GROUP BY Title",
-    "7. What is the total number of views for each channel, and what are their corresponding channel names?": "SELECT Channel_Name, SUM(Views) AS Total_Views FROM video_details GROUP BY Channel_Name",
-    "8. What are the names of all the channels that have published videos in the year 2022?": "SELECT DISTINCT Channel_Name FROM video_details WHERE YEAR(Published_Date) = 2022",
-    "9. What is the average duration of all videos in each channel, and what are their corresponding channel names?": "SELECT Channel_Name, AVG(TIME_TO_SEC(TIMEDIFF(STR_TO_DATE(Duration, '%H:%i:%s'), STR_TO_DATE('00:00:00', '%H:%i:%s')))) AS Average_Duration FROM video_details GROUP BY Channel_Name",
-    "10. Which videos have the highest number of comments, and what are their corresponding channel names?": "SELECT v.Title AS Video_Name, v.Channel_Name AS Channel_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title, v.Channel_Name ORDER BY Comment_Count DESC LIMIT 10"
+    "1. Video names and their channels?": "SELECT Title AS Video_Name, Channel_Name FROM video_details",
+    "2. Channels with most videos & count? ": "SELECT Channel_Name, COUNT(*) AS Video_Count FROM video_details GROUP BY Channel_Name ORDER BY Video_Count DESC LIMIT 5",
+    "3. Top 10 viewed videos & channels?": "SELECT Title AS Video_Name, Channel_Name, Views FROM video_details ORDER BY Views DESC LIMIT 10",
+    "4. Comments Each video &  names?": "SELECT v.Title AS Video_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title",
+    "5.Most liked videos & channels?": "SELECT Title AS Video_Name, Channel_Name, Likes FROM video_details ORDER BY Likes DESC LIMIT 10",
+    "6. Total likes/dislikes per video & names?": "SELECT Title AS Video_Name, SUM(Likes) AS Total_Likes, SUM(likes) AS likes FROM video_details GROUP BY Title",
+    "7. Total views each channel & names?": "SELECT Channel_Name, SUM(Views) AS Total_Views FROM video_details GROUP BY Channel_Name",
+    "8. Channels with videos in 2022?": "SELECT DISTINCT Channel_Name FROM video_details WHERE YEAR(Published_Date) = 2022",
+    "9. Avg duration per channel & names?": "SELECT Channel_Name, AVG(TIME_TO_SEC(TIMEDIFF(STR_TO_DATE(Duration, '%H:%i:%s'), STR_TO_DATE('00:00:00', '%H:%i:%s')))) AS Average_Duration FROM video_details GROUP BY Channel_Name",
+    "10. Most commented videos & channels?": "SELECT v.Title AS Video_Name, v.Channel_Name AS Channel_Name, COUNT(c.Comment_Id) AS Comment_Count FROM video_details v LEFT JOIN comment_details c ON v.Video_Id = c.Video_Id GROUP BY v.Title, v.Channel_Name ORDER BY Comment_Count DESC LIMIT 10"
 }
 
-st.markdown("<h1 style='font-size:18px; color:purple;'>Comprehensive Analysis of YouTube Videos and Channels Using SQL Queries</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='font-size:20px; color:yellow; text-align:center;'>Comprehensive Analysis of YouTube Videos and Channels Using SQL Queries</h1>", unsafe_allow_html=True)
+
+
 
 # Streamlit app
 selected_query = st.selectbox("Select the SQL query", list(queries.keys()))
@@ -534,6 +617,25 @@ if st.button("Run Query"):
         df = execute_query(conn, queries[selected_query])
         if df is not None:
             st.write(df)
+            
+            # Visualization
+            if "Video_Name" in df.columns and "Views" in df.columns:
+                fig = px.bar(df, x="Video_Name", y="Views", title="Top 10 Viewed Videos", labels={'Views':'Number of Views'})
+                st.plotly_chart(fig)
+            elif "Channel_Name" in df.columns and "Video_Count" in df.columns:
+                fig = px.bar(df, x="Channel_Name", y="Video_Count", title="Channels with Most Videos", labels={'Video_Count':'Number of Videos'})
+                st.plotly_chart(fig)
+            elif "Video_Name" in df.columns and "Likes" in df.columns:
+                fig = px.bar(df, x="Video_Name", y="Likes", title="Most Liked Videos", labels={'Likes':'Number of Likes'})
+                st.plotly_chart(fig)
+            elif "Channel_Name" in df.columns and "Total_Views" in df.columns:
+                fig = px.bar(df, x="Channel_Name", y="Total_Views", title="Total Views per Channel", labels={'Total_Views':'Number of Views'})
+                st.plotly_chart(fig)
+            elif "Channel_Name" in df.columns and "Average_Duration" in df.columns:
+                df["Average_Duration"] = df["Average_Duration"] / 60  # Convert seconds to minutes
+                fig = px.bar(df, x="Channel_Name", y="Average_Duration", title="Average Duration per Channel", labels={'Average_Duration':'Average Duration (minutes)'})
+                st.plotly_chart(fig)   
+
         else:
             st.write("No results found.")
         conn.close()
