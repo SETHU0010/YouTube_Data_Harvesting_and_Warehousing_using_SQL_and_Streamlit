@@ -18,31 +18,19 @@ def Api_connect():
 youtube=Api_connect()
 
 # MySQL Connection
-import mysql.connector
-from mysql.connector import Error
-
 def connect_mysql():
     try:
         conn = mysql.connector.connect(
-            host="bwxvnszjkr8ajyvddpid-mysql.services.clever-cloud.com",
-            database="bwxvnszjkr8ajyvddpid",
-            user="u5bczmdiwo59zueo",
-            password="QBo3GpBXHLNvc1NXj3JP",
-            port=3306
+            host="localhost",
+            user="root",
+            password="root",
+            database="Project"
         )
-        if conn.is_connected():
-            print("Connected to MySQL database")
-            return conn
-    except Error as e:
+        print("Connected to MySQL database")
+        return conn
+    except Exception as e:
         print(f"Error connecting to MySQL database: {e}")
         return None
-
-# Example usage:
-connection = connect_mysql()
-if connection:
-    # Perform database operations
-    connection.close()
-
 
 # Table Creation of MySQL
 def create_tables(conn):
