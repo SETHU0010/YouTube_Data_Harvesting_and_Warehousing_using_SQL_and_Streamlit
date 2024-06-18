@@ -21,10 +21,11 @@ youtube=Api_connect()
 def connect_mysql():
     try:
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="root",
-            database="Project"
+            host="bhxsm39dlwgdozmubfiz-mysql.services.clever-cloud.com",
+            user="uyu3oq2q5wm22hhx",
+            password="SA23e0yGRkUxpCD88DOK",
+            database="bhxsm39dlwgdozmubfiz",
+            port=3306
         )
         print("Connected to MySQL database")
         return conn
